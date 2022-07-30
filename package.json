@@ -1,0 +1,17 @@
+{
+  "name": "stimulus-scrolling-video",
+  "private": true,
+  "version": "0.0.0",
+  "main": "dist/stimulus-content-loader.umd.js",
+  "module": "dist/stimulus-content-loader.es.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@hotwired/stimulus": "^3.1.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0"
+  }
+}
