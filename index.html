@@ -16,6 +16,43 @@
     </script>
   </head>
   <body>
-    <div data-controller="scrolling-video">Test</div>
+    <section class="intro">
+      <div class="inner-col">
+        <h1>Stimulus Scrolling Video Controller</h1>
+      </div>
+    </section>
+    <section
+      class="tall"
+      data-controller="scrolling-video"
+      data-scrolling-video-target="observer"
+      data-scrolling-video-preload-value="true"
+      data-scrolling-video-total-frames-value="300"
+      data-scrolling-video-sizes-value="500, 1200"
+      data-scrolling-video-srcs-value="/public/frames_small/video#.jpg, /public/frames_large/video#.jpg"
+    >
+      <div class="sticky">
+        <div class="inner-col">
+          <h2>Apple-esque Scrolling Video</h2>
+        </div>
+        <canvas
+          class="background"
+          data-scrolling-video-target="output"
+        ></canvas>
+      </div>
+    </section>
+    <section>
+      <div class="inner-col">
+        <h2>Features</h2>
+        <ul>
+          <li>Responsive Video Sets</li>
+          <li>Fallback Image</li>
+        </ul>
+      </div>
+    </section>
+    <section>
+      <div class="inner-col">
+        <h2>How to Split Video Files</h2>
+      </div>
+    </section>
   </body>
 </html>
