@@ -55,7 +55,7 @@ section {
 }
 
 section.intro {
-  min-height: 30vh;
+  min-height: 100vh;
 }
 
 section:nth-of-type(odd) {
