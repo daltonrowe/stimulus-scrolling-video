@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { cover } from "intrinsic-scale";
 
 export default class extends Controller {
   declare readonly srcsValue: string;
@@ -24,6 +25,8 @@ export default class extends Controller {
   isUpdatingFrame: boolean = false;
   imgToCanvas: HTMLImageElement = new Image();
   outputContext: CanvasRenderingContext2D | null = null;
+  outputWidth: number = 0;
+  outputHeight: number = 0;
 
   connect() {
     this.processValues();
@@ -54,6 +57,13 @@ export default class extends Controller {
     }
 
     this.frameFileFormat = this.srcs[sizeToUse];
+
+    const { width, height } = this.outputTarget.getClientRects()[0];
+
+    this.outputWidth = width;
+    this.outputHeight = height;
+    this.outputTarget.width = width;
+    this.outputTarget.height = height;
   }
 
   // preload all images for a given video set
@@ -83,7 +93,7 @@ export default class extends Controller {
   setupViewportObserver(): void {
     let options = {
       root: null,
-      rootMargin: "0px",
+      rootMargin: `${window.innerHeight}px`,
       threshold: 1.0,
     };
 
@@ -119,8 +129,10 @@ export default class extends Controller {
   // get frame by calcing percentage of scrolling complete
   frameToShow(): number {
     const { top, height } = this.element.getClientRects()[0];
-    const perc = Math.abs(top / height);
-    return Math.round(perc * this.totalFramesValue);
+    const perc = (top * -1) / height;
+    const clampedPerc = Math.min(Math.max(perc, 0), 1);
+
+    return Math.round(clampedPerc * this.totalFramesValue);
   }
 
   // update frame on output canvas
@@ -129,7 +141,15 @@ export default class extends Controller {
     this.imgToCanvas.src = url;
   }
 
+  // draw image data to canvas after its loaded
   drawToCanvas() {
-    this.outputContext?.drawImage(this.imgToCanvas, 0, 0);
+    const { width, height, x, y } = cover(
+      this.outputWidth,
+      this.outputHeight,
+      960,
+      540
+    );
+
+    this.outputContext?.drawImage(this.imgToCanvas, x, y, width, height);
   }
 }

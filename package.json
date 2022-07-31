@@ -11,7 +11,11 @@
   },
   "devDependencies": {
     "@hotwired/stimulus": "^3.1.0",
+    "@types/intrinsic-scale": "^3.0.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0"
+  },
+  "dependencies": {
+    "intrinsic-scale": "^3.0.4"
   }
 }
