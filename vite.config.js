@@ -1,6 +1,18 @@
 import path from "path";
 
 export default ({ mode }) => {
+  if (mode === "netlify") {
+    return {
+      build: {
+        rollupOptions: {
+          input: {
+            index: path.resolve(__dirname, "index.html"),
+          },
+        },
+      },
+    };
+  }
+
   return {
     build: {
       lib: {
