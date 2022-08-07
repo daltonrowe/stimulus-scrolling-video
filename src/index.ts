@@ -5,7 +5,8 @@ export default class extends Controller {
   declare readonly srcsValue: string;
   declare readonly sizesValue: string;
   declare readonly preloadValue: boolean;
-  declare readonly totalFramesValue: number;
+  declare readonly totalFramesValue: string;
+  declare readonly aspectValue: number;
 
   declare readonly outputTarget: HTMLCanvasElement;
 
@@ -15,12 +16,15 @@ export default class extends Controller {
     sizes: String,
     srcs: String,
     preload: Boolean,
-    totalFrames: Number,
+    totalFrames: String,
+    aspect: Number,
   };
 
   srcs: string[] = [];
   sizes: number[] = [];
+  totalFrames: number[] = [];
   frameFileFormat: string | null = null;
+  totalFramesToUse: number = 0;
   observer: IntersectionObserver | null = null;
   isUpdatingFrame: boolean = false;
   imgToCanvas: HTMLImageElement = new Image();
@@ -49,6 +53,9 @@ export default class extends Controller {
     this.sizes = this.sizesValue
       .split(",")
       .map((size: string) => parseInt(size));
+    this.totalFrames = this.totalFramesValue
+      .split(",")
+      .map((length: string) => parseInt(length));
 
     let sizeToUse = 0;
     for (let i = 0; i < this.sizes.length; i++) {
@@ -57,6 +64,7 @@ export default class extends Controller {
     }
 
     this.frameFileFormat = this.srcs[sizeToUse];
+    this.totalFramesToUse = this.totalFrames[sizeToUse];
 
     const { width, height } = this.outputTarget.getClientRects()[0];
 
@@ -68,7 +76,7 @@ export default class extends Controller {
 
   // preload all images for a given video set
   preloadImages(): void {
-    for (let i = 0; i <= this.totalFramesValue; i++) {
+    for (let i = 0; i <= this.totalFramesToUse; i++) {
       this.preloadImage(i);
     }
   }
@@ -85,7 +93,7 @@ export default class extends Controller {
     if (!this.frameFileFormat) return "";
     const frameNumberWithLeadingZeros = i
       .toString()
-      .padStart(this.totalFramesValue.toString().length, "0");
+      .padStart(this.totalFramesToUse.toString().length, "0");
     return `${this.frameFileFormat?.replace("#", frameNumberWithLeadingZeros)}`;
   }
 
@@ -132,7 +140,7 @@ export default class extends Controller {
     const perc = (top * -1) / height;
     const clampedPerc = Math.min(Math.max(perc, 0), 1);
 
-    return Math.round(clampedPerc * this.totalFramesValue);
+    return Math.round(clampedPerc * this.totalFramesToUse);
   }
 
   // update frame on output canvas
@@ -146,8 +154,8 @@ export default class extends Controller {
     const { width, height, x, y } = cover(
       this.outputWidth,
       this.outputHeight,
-      960,
-      540
+      1000,
+      1000 * this.aspectValue
     );
 
     this.outputContext?.drawImage(this.imgToCanvas, x, y, width, height);
